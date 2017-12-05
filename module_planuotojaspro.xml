@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_planuotojaspro" default="compile.module.planuotojaspro">
+    <dirname property="module.planuotojaspro.basedir" file="${ant.file.module_planuotojaspro}"/>
+
+    <property name="module.jdk.home.planuotojaspro" value="${project.jdk.home}"/>
+    <property name="module.jdk.bin.planuotojaspro" value="${project.jdk.bin}"/>
+    <property name="module.jdk.classpath.planuotojaspro" value="${project.jdk.classpath}"/>
+
+    <property name="compiler.args.planuotojaspro" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+
+    <property name="planuotojaspro.output.dir" value="${module.planuotojaspro.basedir}/target/classes"/>
+    <property name="planuotojaspro.testoutput.dir" value="${module.planuotojaspro.basedir}/target/test-classes"/>
+
+    <path id="planuotojaspro.module.bootclasspath">
+        <!-- Paths to be included in compilation bootclasspath -->
+    </path>
+
+    <path id="planuotojaspro.module.production.classpath">
+        <path refid="${module.jdk.classpath.planuotojaspro}"/>
+    </path>
+
+    <path id="planuotojaspro.runtime.production.module.classpath">
+        <pathelement location="${planuotojaspro.output.dir}"/>
+    </path>
+
+    <path id="planuotojaspro.module.classpath">
+        <pathelement location="${planuotojaspro.output.dir}"/>
+        <path refid="${module.jdk.classpath.planuotojaspro}"/>
+        <path refid="library.maven:_junit:junit:4.8.2.classpath"/>
+    </path>
+
+    <path id="planuotojaspro.runtime.module.classpath">
+        <pathelement location="${planuotojaspro.testoutput.dir}"/>
+        <pathelement location="${planuotojaspro.output.dir}"/>
+        <path refid="library.maven:_junit:junit:4.8.2.classpath"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.planuotojaspro">
+        <patternset refid="ignored.files"/>
+    </patternset>
+
+    <patternset id="excluded.from.compilation.planuotojaspro">
+        <patternset refid="excluded.from.module.planuotojaspro"/>
+    </patternset>
+
+    <path id="planuotojaspro.module.sourcepath">
+        <dirset dir="${module.planuotojaspro.basedir}">
+            <include name="src/main/java"/>
+            <include name="src/main/resources"/>
+        </dirset>
+    </path>
+
+    <path id="planuotojaspro.module.test.sourcepath">
+        <dirset dir="${module.planuotojaspro.basedir}">
+            <include name="src/test/java"/>
+        </dirset>
+    </path>
+
+
+    <target name="compile.module.planuotojaspro"
+            depends="compile.module.planuotojaspro.production,compile.module.planuotojaspro.tests"
+            description="Compile module PlanuotojasPro"/>
+
+    <target name="compile.module.planuotojaspro.production" depends="register.custom.compilers"
+            description="Compile module PlanuotojasPro; production classes">
+        <mkdir dir="${planuotojaspro.output.dir}"/>
+        <javac2 destdir="${planuotojaspro.output.dir}" debug="${compiler.debug}"
+                nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true"
+                executable="${module.jdk.bin.planuotojaspro}/javac">
+            <compilerarg line="${compiler.args.planuotojaspro}"/>
+            <bootclasspath refid="planuotojaspro.module.bootclasspath"/>
+            <classpath refid="planuotojaspro.module.production.classpath"/>
+            <src refid="planuotojaspro.module.sourcepath"/>
+            <patternset refid="excluded.from.compilation.planuotojaspro"/>
+        </javac2>
+
+        <copy todir="${planuotojaspro.output.dir}">
+            <fileset dir="${module.planuotojaspro.basedir}/src/main/java">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+            <fileset dir="${module.planuotojaspro.basedir}/src/main/resources">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile.module.planuotojaspro.tests"
+            depends="register.custom.compilers,compile.module.planuotojaspro.production"
+            description="compile module PlanuotojasPro; test classes" unless="skip.tests">
+        <mkdir dir="${planuotojaspro.testoutput.dir}"/>
+        <javac2 destdir="${planuotojaspro.testoutput.dir}" debug="${compiler.debug}"
+                nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true"
+                executable="${module.jdk.bin.planuotojaspro}/javac">
+            <compilerarg line="${compiler.args.planuotojaspro}"/>
+            <bootclasspath refid="planuotojaspro.module.bootclasspath"/>
+            <classpath refid="planuotojaspro.module.classpath"/>
+            <src refid="planuotojaspro.module.test.sourcepath"/>
+            <patternset refid="excluded.from.compilation.planuotojaspro"/>
+        </javac2>
+
+        <copy todir="${planuotojaspro.testoutput.dir}">
+            <fileset dir="${module.planuotojaspro.basedir}/src/test/java">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clean.module.planuotojaspro" description="cleanup module">
+        <delete dir="${planuotojaspro.output.dir}"/>
+        <delete dir="${planuotojaspro.testoutput.dir}"/>
+    </target>
+</project>

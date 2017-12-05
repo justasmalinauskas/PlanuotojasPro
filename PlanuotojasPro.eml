@@ -8,5 +8,6 @@
 	<lib name="Maven: junit:junit:4.8.2" scope="TEST"/>
 	<levels>
 		<level name="Maven: junit:junit:4.8.2" value="project"/>
+		<level name="Maven: com.jgoodies:forms:1.3.0" value="project"/>
 	</levels>
 </component>

@@ -5,11 +5,19 @@ import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
-import static com.justas.planuotojaspro.global.GlobalVariables.fallbackIcon;
+import static com.justas.planuotojaspro.global.GlobalVariables.*;
 
 
 public class GlobalMethods {
+
+    private Preferences prefs;
+
+    public GlobalMethods() {
+        prefs = Preferences.userNodeForPackage(GlobalMethods.class);
+    }
     private static Image getFallbackImage() {
         Image image = null;
         try {
@@ -22,6 +30,10 @@ public class GlobalMethods {
         return image;
     }
 
+    public static String getTranslation(String transname) {
+        return ResourceBundle.getBundle(resPath).getString(transname);
+    }
+
     public static Image getResImage(String imgname) {
         Image image;
         try {
@@ -31,4 +43,13 @@ public class GlobalMethods {
         }
         return image;
     }
+
+    public void saveSettings(String setName, String setValue) {
+        prefs.put(setName, setValue);
+    }
+
+    public Object getSettings(String setName) {
+        return prefs.get(setName, "");
+    }
+
 }

@@ -68,12 +68,12 @@ public class MainWindow {
 
     private void showMenuText() {
 
-        menuButton.setText(ResourceBundle.getBundle(resPath).getString("menu"));
-        settings.setText(ResourceBundle.getBundle(resPath).getString("settings"));
-        currenttasks.setText(ResourceBundle.getBundle(resPath).getString("currenttasks"));
-        about.setText(ResourceBundle.getBundle(resPath).getString("about"));
-        statistics.setText(ResourceBundle.getBundle(resPath).getString("statistics"));
-        tasks.setText(ResourceBundle.getBundle(resPath).getString("tasks"));
+        menuButton.setText(getTranslation("t_menu"));
+        settings.setText(getTranslation("t_settings"));
+        currenttasks.setText(getTranslation("t_currenttasks"));
+        about.setText(getTranslation("t_about"));
+        statistics.setText(getTranslation("t_statistics"));
+        tasks.setText(getTranslation("t_tasks"));
     }
 
     private void hideMenuText() {
