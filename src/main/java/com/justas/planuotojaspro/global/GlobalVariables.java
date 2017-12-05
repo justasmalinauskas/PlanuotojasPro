@@ -1,4 +1,4 @@
-package main.java.com.justas.planuotojaspro.global;
+package com.justas.planuotojaspro.global;
 
 public class GlobalVariables {
     public static final String resPath = "lang/resources";

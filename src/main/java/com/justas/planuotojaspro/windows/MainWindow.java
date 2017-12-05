@@ -1,4 +1,4 @@
-package main.java.com.justas.planuotojaspro.windows;
+package com.justas.planuotojaspro.windows;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,8 +6,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ResourceBundle;
 
-import static main.java.com.justas.planuotojaspro.global.GlobalMethods.*;
-import static main.java.com.justas.planuotojaspro.global.GlobalVariables.*;
+import static com.justas.planuotojaspro.global.GlobalMethods.*;
+import static com.justas.planuotojaspro.global.GlobalVariables.*;
 
 public class MainWindow {
     private JFrame frame;

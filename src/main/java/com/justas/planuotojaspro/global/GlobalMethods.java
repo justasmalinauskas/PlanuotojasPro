@@ -1,4 +1,4 @@
-package main.java.com.justas.planuotojaspro.global;
+package com.justas.planuotojaspro.global;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -6,7 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 
-import static main.java.com.justas.planuotojaspro.global.GlobalVariables.*;
+import static com.justas.planuotojaspro.global.GlobalVariables.fallbackIcon;
+
 
 public class GlobalMethods {
     private static Image getFallbackImage() {

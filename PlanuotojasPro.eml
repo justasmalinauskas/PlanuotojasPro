@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component inherit-compiler-output="true" inheritJdk="true">
-	<output-test url="file://$MODULE_DIR$/out/test/PlanuotojasPro"/>
-	<exclude-output/>
+<component LANGUAGE_LEVEL="JDK_1_8" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
 	<contentEntry url="file://$MODULE_DIR$">
-		<testFolder url="file://$MODULE_DIR$/src/test"/>
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
 	</contentEntry>
+	<lib name="Maven: junit:junit:4.8.2" scope="TEST"/>
+	<levels>
+		<level name="Maven: junit:junit:4.8.2" value="project"/>
+	</levels>
 </component>

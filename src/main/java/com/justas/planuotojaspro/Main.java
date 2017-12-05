@@ -1,7 +1,7 @@
-package main.java.com.justas.planuotojaspro;
+package com.justas.planuotojaspro;
 
 
-import main.java.com.justas.planuotojaspro.windows.MainWindow;
+import com.justas.planuotojaspro.windows.MainWindow;
 
 public class Main {
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
-	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/PlanuotojasPro/src/main/resources"/>
-	<classpathentry kind="src" path="/PlanuotojasPro/src/test"/>
-	<classpathentry kind="src" path="/PlanuotojasPro/src"/>
-	<classpathentry kind="output" path="out/production/PlanuotojasPro"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: junit:junit:4.8.2"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

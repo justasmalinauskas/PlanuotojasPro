@@ -1,4 +1,4 @@
-package main.java.com.justas.planuotojaspro.windows;
+package com.justas.planuotojaspro.windows;
 
 import javax.swing.*;
 
