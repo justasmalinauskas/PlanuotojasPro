@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.justas.planuotojaspro.MainWindow">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="main.java.com.justas.planuotojaspro.windows.MainWindow">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
       <xy x="20" y="20" width="547" height="400"/>
@@ -74,7 +74,7 @@
           </vspacer>
         </children>
       </grid>
-      <grid id="61cb3" binding="content" layout-manager="BorderLayout" hgap="0" vgap="0">
+      <grid id="61cb3" binding="content" custom-create="true" layout-manager="CardLayout" hgap="0" vgap="0">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
