@@ -56,4 +56,10 @@ public class CurrentTasksWindow {
     public JPanel returnPanel() {
         return this.panel;
     }
+
+    private void createUIComponents() {
+        //searchbar = new JRoundedTextField(20);
+        searchbar = new JRoundedTextField(20, getTranslation("t_searchpanel"));
+        // TODO: place custom component creation code here
+    }
 }
