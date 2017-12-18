@@ -5,6 +5,7 @@ import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -13,7 +14,7 @@ import static com.justas.planuotojaspro.global.GlobalVariables.*;
 
 public class GlobalMethods {
 
-    private Preferences prefs;
+    private static Preferences prefs;
 
     public GlobalMethods() {
         prefs = Preferences.userNodeForPackage(GlobalMethods.class);
@@ -31,7 +32,7 @@ public class GlobalMethods {
     }
 
     public static String getTranslation(String transname) {
-        return ResourceBundle.getBundle(resPath).getString(transname);
+        return ResourceBundle.getBundle("lang/Resources", new Locale("lt")).getString(transname);
     }
 
     public static Image getResImage(String imgname) {
@@ -44,11 +45,11 @@ public class GlobalMethods {
         return image;
     }
 
-    public void saveSettings(String setName, String setValue) {
+    public static void saveSettings(String setName, String setValue) {
         prefs.put(setName, setValue);
     }
 
-    public Object getSettings(String setName) {
+    public static Object getSettings(String setName) {
         return prefs.get(setName, "");
     }
 

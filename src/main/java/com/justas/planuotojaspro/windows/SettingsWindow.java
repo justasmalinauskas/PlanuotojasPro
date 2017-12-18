@@ -9,4 +9,19 @@ public class SettingsWindow {
     public JPanel returnPanel() {
         return this.panel;
     }
+
+
+    public void SettingsWindow() {
+        setLangSetting();
+    }
+
+    private void setLangSetting() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                langsetting.addItem("LT");
+                langsetting.addItem("EN");
+                Object cmboitem = langsetting.getSelectedItem();
+            }
+        });
+    }
 }

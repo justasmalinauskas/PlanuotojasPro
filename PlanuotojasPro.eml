@@ -9,5 +9,6 @@
 	<levels>
 		<level name="Maven: junit:junit:4.8.2" value="project"/>
 		<level name="Maven: com.github.lgooddatepicker:LGoodDatePicker:10.3.1" value="project"/>
+		<level name="Maven: org.xerial:sqlite-jdbc:3.21.0.1" value="project"/>
 	</levels>
 </component>

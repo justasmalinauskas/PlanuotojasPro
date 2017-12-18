@@ -1,13 +1,6 @@
 package com.justas.planuotojaspro.global;
 
 public class GlobalVariables {
-
-
-    protected static final String LANG = "lang";
-
-
-
-    public static final String resPath = "lang/resources";
     public static final String fallbackIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAIAAAC1e" +
             "HXNAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD" +
             "/AP+gvaeTAAAAB3RJTUUH4QwFCzY2qRGUuQAABCRJREFUWMOtmFuPEkkYhl/6XNUF49yYOGYO3pjoroNk1b03mc1u9JcM9Aa6ie" +

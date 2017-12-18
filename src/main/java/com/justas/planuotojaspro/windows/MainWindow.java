@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 
 
 import static com.justas.planuotojaspro.global.GlobalMethods.*;
+import com.justas.planuotojaspro.code.*;
 import static com.justas.planuotojaspro.global.GlobalVariables.*;
 
 public class MainWindow {
@@ -105,7 +106,7 @@ public class MainWindow {
         frame.add(mainPanel);
         frame.setResizable(true);
         frame.setVisible(true);
-
+        DatabaseActions.createDB();
         initialMenuSettings();
         setIcons();
         setCardPanelItems();
