@@ -1,56 +1,46 @@
 package com.justas.planuotojaspro.windows;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TasksWindow {
     private JPanel panel;
     private JTextField taskName;
     private JRadioButton thisIsOneTimeRadioButton;
-    private JCheckBox mondayCheckBox;
-    private JCheckBox wednesdayCheckBox;
-    private JCheckBox thursdayCheckBox;
-    private JCheckBox fridayCheckBox;
-    private JCheckBox saturdayCheckBox;
-    private JCheckBox sundayCheckBox;
-    private JCheckBox tuesdayCheckBox;
-    private JRadioButton thisIsReccuringTaskRadioButton;
     private JRadioButton thisIsTaskHappeningRadioButton;
-    private JList selectedDays;
+    private JList<String> selectedDays;
     private JPanel calendarField;
     private JButton cancelChangesButton;
     private JButton saveChangesButton;
-    private JTextField textField1;
-    private JButton button1;
+    private com.github.lgooddatepicker.components.DatePicker selectDay;
+    private JButton insertDay;
+    private ArrayList<String> tasks = new ArrayList<>();
 
     public TasksWindow() {
         thisIsOneTimeRadioButton.setSelected(true);
+        specificDays();
         thisIsOneTimeRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 thisIsOneTimeRadioButton.setSelected(true);
-                thisIsReccuringTaskRadioButton.setSelected(false);
                 thisIsTaskHappeningRadioButton.setSelected(false);
-                reccuringDays();
-            }
-        });
-        thisIsReccuringTaskRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                thisIsReccuringTaskRadioButton.setSelected(true);
-                thisIsOneTimeRadioButton.setSelected(false);
-                thisIsTaskHappeningRadioButton.setSelected(false);
-                reccuringDays();
+                specificDays();
             }
         });
         thisIsTaskHappeningRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 thisIsTaskHappeningRadioButton.setSelected(true);
-                thisIsReccuringTaskRadioButton.setSelected(false);
                 thisIsOneTimeRadioButton.setSelected(false);
-                reccuringDays();
+                specificDays();
             }
         });
         saveChangesButton.addActionListener(new ActionListener() {
@@ -59,30 +49,59 @@ public class TasksWindow {
 
             }
         });
+        insertDay.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                tasks.add(selectDay.getText());
+                getDays();
+            }
+        });
+        cancelChangesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                
+            }
+        });
     }
 
-    private void reccuringDays() {
-        if (!thisIsReccuringTaskRadioButton.isSelected()) {
-            mondayCheckBox.setEnabled(false);
-            tuesdayCheckBox.setEnabled(false);
-            wednesdayCheckBox.setEnabled(false);
-            thursdayCheckBox.setEnabled(false);
-            fridayCheckBox.setEnabled(false);
-            saturdayCheckBox.setEnabled(false);
-            sundayCheckBox.setEnabled(false);
+    private void specificDays() {
+        if (!thisIsTaskHappeningRadioButton.isSelected()) {
+            selectDay.setEnabled(false);
+            selectedDays.setEnabled(false);
+            insertDay.setEnabled(false);
         } else {
-            mondayCheckBox.setEnabled(true);
-            tuesdayCheckBox.setEnabled(true);
-            wednesdayCheckBox.setEnabled(true);
-            thursdayCheckBox.setEnabled(true);
-            fridayCheckBox.setEnabled(true);
-            saturdayCheckBox.setEnabled(true);
-            sundayCheckBox.setEnabled(true);
+            selectDay.setEnabled(true);
+            selectedDays.setEnabled(true);
+            insertDay.setEnabled(true);
         }
     }
 
+    private void getDays() {
+        final DefaultListModel<String> model = new DefaultListModel<>();
+        List<String> listWithoutDuplicates = tasks.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        tasks = new ArrayList<>();
+        tasks.addAll(listWithoutDuplicates);
+        for (String task : tasks) {
+            model.addElement(task);
+        }
+
+        selectedDays.setModel(model);
+    }
+
+
     public JPanel returnPanel() {
         return this.panel;
+    }
+
+    private void createUIComponents() {
+        DatePickerSettings settings = new DatePickerSettings();
+        settings.setFirstDayOfWeek(DayOfWeek.MONDAY);
+        settings.setAllowKeyboardEditing(false);
+        settings.setFormatForDatesCommonEra("yyyy-MM-dd");
+        selectDay = new DatePicker(settings);
+        selectDay.setDateToToday();
     }
 
     // if one time task send today

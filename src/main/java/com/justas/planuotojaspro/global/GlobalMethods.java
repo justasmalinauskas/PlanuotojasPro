@@ -38,7 +38,8 @@ public class GlobalMethods {
     public static Image getResImage(String imgname) {
         Image image;
         try {
-            image = ImageIO.read(new File(GlobalMethods.class.getResource("/images/" + imgname + ".png").getPath())).getScaledInstance(45, -1, Image.SCALE_SMOOTH);
+            image = ImageIO.read(new File(GlobalMethods.class.getResource("/images/" + imgname + ".png")
+                    .getPath())).getScaledInstance(45, -1, Image.SCALE_SMOOTH);
         } catch (IOException | NullPointerException e) {
             image = getFallbackImage();
         }

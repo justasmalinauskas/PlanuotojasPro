@@ -1,6 +1,7 @@
 package com.justas.planuotojaspro.code;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseActions {
     private static Connection c = null;
@@ -22,12 +23,9 @@ public class DatabaseActions {
 
     private static void createTasks() {
         String sql = "CREATE TABLE IF NOT EXISTS Tasks (\n"
-                + "	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"  // ID
-                + "	name text NOT NULL,\n" // Užduoties pavadinimas
-                + "	basetime INTEGER NOT NULL, \n" //Laiko limitas sekundėmis
-                + "	recurring TEXT NOT NULL, \n"    // Ar pasikartojantis Y arba N
-                + "	recurringdays TEXT, \n" // Formatas: MO,TU,WE,TH,FR,SA,SU
-                + "	norecurringdate INTEGER \n" // Formatas yra unix timestamp pvz: 1513629878
+                + "	taskid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"  // ID
+                + "	taskname TEXT NOT NULL,\n" // Užduoties pavadinimas
+                + "	taskbase INTEGER NOT NULL \n" //Laiko limitas minutėmis
                 + ");";
         try (Statement stmt = c.createStatement()) {
             stmt.execute(sql);
@@ -39,10 +37,10 @@ public class DatabaseActions {
 
     private static void createTimeTasks() {
         String sql = "CREATE TABLE IF NOT EXISTS TimeTasks (\n"
-	            + "id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" // ID
-	            + "starttime	INTEGER NOT NULL,\n" // Formatas yra unix timestamp pvz: 1513629878
-                + "endtime	INTEGER NOT NULL,\n" // Formatas yra unix timestamp pvz: 1513629878
-                + "taskid	INTEGER NOT NULL\n" // Tasks.ID
+	            + "timeid	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" // ID
+	            + "timetaskid	INTEGER NOT NULL,\n" // taskid iš Tasks lentelės
+                + "taskduration	INTEGER NOT NULL,\n" // realus įvykdytas laikas, minutėmis
+                + "taskdate	TEXT NOT NULL\n" // Data, kuriai priskirta užduotis
                 +");";
         try (Statement stmt = c.createStatement()) {
             stmt.execute(sql);
@@ -52,22 +50,25 @@ public class DatabaseActions {
         }
     }
 
-    private static void createTasksDates() {
-        String sql = "CREATE TABLE IF NOT EXISTS TaskDates (\n"
-                + "id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n"
-                + "date	INTEGER NOT NULL,\n"
-                + "taskid	INTEGER NOT NULL\n"
-                +");";
-        try (Statement stmt = c.createStatement()) {
-            stmt.execute(sql);
-            System.out.println("Table TaskDates created successfully");
+    public void insertTask(String taskName, Integer taskBase, ArrayList<String> dates) {
+        String sql = "INSERT INTO Tasks(taskname, taskbase VALUES(?,?)";
+        try (PreparedStatement pstmt = c.prepareStatement(sql)) {
+            pstmt.setString(1, taskName);
+            pstmt.setInt(2, taskBase);
         } catch (SQLException e) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
-    }
 
-    public void insertTask(String taskName, Integer taskBase, TimeOption option) {
-        String sql = "INSERT INTO Tasks(name, baseline) VALUES(?,?)";
+        for (int i = 0; i < dates.size(); i++) {
+
+            sql = "INSERT INTO TimeTasks(timetaskid, taskduration, taskdate VALUES(?,?,?)";
+            try (PreparedStatement pstmt = c.prepareStatement(sql)) {
+                pstmt.setString(1, taskName);
+                pstmt.setInt(2, taskBase);
+            } catch (SQLException e) {
+                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            }
+        }
 
     }
 }
