@@ -1,5 +1,7 @@
 package com.justas.planuotojaspro.global;
 
+import com.justas.planuotojaspro.code.UTF8Control;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.ByteArrayInputStream;
@@ -32,7 +34,7 @@ public class GlobalMethods {
     }
 
     public static String getTranslation(String transname) {
-        return ResourceBundle.getBundle("lang/Resources", new Locale("lt")).getString(transname);
+        return ResourceBundle.getBundle("lang/Resources", new Locale("lt"), new UTF8Control()).getString(transname);
     }
 
     public static Image getResImage(String imgname) {

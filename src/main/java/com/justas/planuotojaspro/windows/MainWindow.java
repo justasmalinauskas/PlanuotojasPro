@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 
@@ -25,6 +26,11 @@ public class MainWindow {
 
 
     public MainWindow() {
+        // default locale stuff
+
+        Locale.setDefault(new Locale("lt"));
+
+
         menuButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
@@ -88,7 +94,7 @@ public class MainWindow {
         }
     }
 
-    public void changeVisableWindow(String window) {
+    private void changeVisableWindow(String window) {
         CardLayout cl = (CardLayout) (content.getLayout());
         cl.show(content, window);
     }
@@ -98,7 +104,7 @@ public class MainWindow {
     }
 
 
-    public void guiStart() {
+    private void guiStart() {
         frame = new JFrame("PlanuotojasPro");
         frame.setMinimumSize(new Dimension(800, 600));
         frame.setSize(800, 600);
@@ -152,4 +158,6 @@ public class MainWindow {
         content = new JPanel(new CardLayout());
         // TODO: place custom component creation code here
     }
+
+
 }

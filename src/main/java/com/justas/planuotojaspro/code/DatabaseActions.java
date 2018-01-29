@@ -1,5 +1,7 @@
 package com.justas.planuotojaspro.code;
 
+import com.justas.planuotojaspro.global.Task;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -51,24 +53,91 @@ public class DatabaseActions {
     }
 
     public void insertTask(String taskName, Integer taskBase, ArrayList<String> dates) {
-        String sql = "INSERT INTO Tasks(taskname, taskbase VALUES(?,?)";
+        String sql = "INSERT INTO Tasks(taskname, taskbase) VALUES(?,?)";
         try (PreparedStatement pstmt = c.prepareStatement(sql)) {
             pstmt.setString(1, taskName);
             pstmt.setInt(2, taskBase);
+            pstmt.execute();
         } catch (SQLException e) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
-
-        for (int i = 0; i < dates.size(); i++) {
-
-            sql = "INSERT INTO TimeTasks(timetaskid, taskduration, taskdate VALUES(?,?,?)";
+        //
+        String sqlmaxid = "SELECT * FROM Tasks ORDER BY taskid DESC LIMIT 1";
+        int maxid = 0;
+        try (Statement stmt = c.createStatement();
+             ResultSet rs = stmt.executeQuery(sqlmaxid)) {
+            while (rs.next()) {
+                maxid = rs.getInt("taskid");
+                System.out.println(rs.getInt("taskid"));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        //
+        for (String date : dates) {
+            sql = "INSERT INTO TimeTasks(timetaskid, taskduration, taskdate) VALUES(?,?,?)";
             try (PreparedStatement pstmt = c.prepareStatement(sql)) {
-                pstmt.setString(1, taskName);
-                pstmt.setInt(2, taskBase);
+                pstmt.setInt(1, maxid);
+                pstmt.setInt(2, 0);
+                pstmt.setString(3, date);
+                pstmt.execute();
             } catch (SQLException e) {
-                System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+                System.err.println(e.getClass().getName() + ": " + e.getMessage());
             }
         }
+    }
 
+
+    public ArrayList<Task> getTasksBetweenDates(String dateFrom, String dateTo) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        String sql = "SELECT t.taskid, t.taskname, t.taskbase, td.timeid, td.taskduration, td.taskdate FROM Tasks t " +
+                "INNER JOIN TimeTasks td ON t.taskid=td.timetaskid " +
+                "WHERE td.taskdate BETWEEN ? AND ?";
+        try (PreparedStatement pstmt = c.prepareStatement(sql)) {
+            pstmt.setString(1, dateFrom);
+            pstmt.setString(2, dateTo);
+            ResultSet rs = pstmt.executeQuery();
+            tasks = getTasks(rs);
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return tasks;
+    }
+
+
+    public ArrayList<Task> getTasksAtDate(String date) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        String sql = "SELECT t.taskid, t.taskname, t.taskbase, td.timeid, td.taskduration, td.taskdate FROM Tasks t " +
+                "INNER JOIN TimeTasks td ON t.taskid=td.timetaskid " +
+                "WHERE td.taskdate = ?";
+        try (PreparedStatement pstmt = c.prepareStatement(sql)) {
+            pstmt.setString(1, date);
+            ResultSet rs = pstmt.executeQuery();
+            tasks = getTasks(rs);
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        }
+        return tasks;
+    }
+
+
+    private ArrayList<Task> getTasks(ResultSet rs) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                int taskid = rs.getInt("taskid");
+                String taskname = rs.getString("taskname");
+                int taskbase = rs.getInt("taskbase");
+
+                int timeid = rs.getInt("timeid");
+                int taskduration = rs.getInt("taskduration");
+                String taskdate = rs.getString("taskdate");
+
+                tasks.add(new Task(taskid, taskname, taskbase, timeid, taskduration, taskdate));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tasks;
     }
 }

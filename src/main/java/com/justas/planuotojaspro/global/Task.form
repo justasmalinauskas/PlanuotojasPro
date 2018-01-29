@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.justas.planuotojaspro.global.Task">
+  <grid id="27dc6" binding="panel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+    <constraints>
+      <xy x="20" y="378" width="500" height="42"/>
+    </constraints>
+    <properties>
+      <maximumSize width="32767" height="36"/>
+      <minimumSize width="237" height="36"/>
+      <preferredSize width="0" height="50"/>
+    </properties>
+    <border type="line">
+      <color color="-16777216"/>
+    </border>
+    <children>
+      <component id="a7bc2" class="javax.swing.JLabel" binding="taskname">
+        <constraints/>
+        <properties>
+          <text value="taskname"/>
+        </properties>
+      </component>
+      <component id="46cce" class="javax.swing.JLabel" binding="tasktimes">
+        <constraints/>
+        <properties>
+          <text value="0:00/0:00"/>
+        </properties>
+      </component>
+      <component id="3c3cf" class="javax.swing.JButton" binding="changeTaskStat">
+        <constraints/>
+        <properties>
+          <hideActionText value="false"/>
+          <horizontalAlignment value="0"/>
+          <text value="Start"/>
+        </properties>
+      </component>
+      <component id="5d16f" class="javax.swing.JButton" binding="taskSettings">
+        <constraints/>
+        <properties>
+          <horizontalAlignment value="4"/>
+          <text value="Edit"/>
+          <verticalAlignment value="1"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

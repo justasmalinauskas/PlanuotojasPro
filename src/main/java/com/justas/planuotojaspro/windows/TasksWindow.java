@@ -2,14 +2,21 @@ package com.justas.planuotojaspro.windows;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.justas.planuotojaspro.code.DatabaseActions;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.justas.planuotojaspro.global.GlobalMethods.getTranslation;
+import static com.justas.planuotojaspro.global.UserMessages.errorMessage;
 
 public class TasksWindow {
     private JPanel panel;
@@ -22,45 +29,50 @@ public class TasksWindow {
     private JButton saveChangesButton;
     private com.github.lgooddatepicker.components.DatePicker selectDay;
     private JButton insertDay;
+    private JSpinner taskBase;
     private ArrayList<String> tasks = new ArrayList<>();
 
     public TasksWindow() {
         thisIsOneTimeRadioButton.setSelected(true);
         specificDays();
-        thisIsOneTimeRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                thisIsOneTimeRadioButton.setSelected(true);
-                thisIsTaskHappeningRadioButton.setSelected(false);
-                specificDays();
-            }
-        });
-        thisIsTaskHappeningRadioButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                thisIsTaskHappeningRadioButton.setSelected(true);
-                thisIsOneTimeRadioButton.setSelected(false);
-                specificDays();
-            }
-        });
-        saveChangesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
 
+
+        thisIsOneTimeRadioButton.addActionListener(actionEvent -> {
+            thisIsOneTimeRadioButton.setSelected(true);
+            thisIsTaskHappeningRadioButton.setSelected(false);
+            specificDays();
+        });
+        thisIsTaskHappeningRadioButton.addActionListener(actionEvent -> {
+            thisIsTaskHappeningRadioButton.setSelected(true);
+            thisIsOneTimeRadioButton.setSelected(false);
+            specificDays();
+        });
+        saveChangesButton.addActionListener(actionEvent -> {
+            if (taskName.getText().equals("")) {
+                errorMessage(getTranslation("t_musthavetaskname"), getTranslation("t_error"));
+                return;
+            }
+            if (thisIsTaskHappeningRadioButton.isSelected() && tasks.size() == 0) {
+                errorMessage(getTranslation("t_musthavedates"), getTranslation("t_error"));
+                return;
+            }
+            DatabaseActions db = new DatabaseActions();
+            if (thisIsOneTimeRadioButton.isSelected()) {
+                ArrayList<String> quick = new ArrayList<>();
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate localDate = LocalDate.now();
+                quick.add(dtf.format(localDate));
+                db.insertTask(taskName.getText(), (Integer) taskBase.getValue(), quick);
+            } else {
+                db.insertTask(taskName.getText(), (Integer) taskBase.getValue(), tasks);
             }
         });
-        insertDay.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                tasks.add(selectDay.getText());
-                getDays();
-            }
+        insertDay.addActionListener(actionEvent -> {
+            tasks.add(selectDay.getText());
+            getDays();
         });
-        cancelChangesButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                
-            }
+        cancelChangesButton.addActionListener(actionEvent -> {
+
         });
     }
 
@@ -102,6 +114,8 @@ public class TasksWindow {
         settings.setFormatForDatesCommonEra("yyyy-MM-dd");
         selectDay = new DatePicker(settings);
         selectDay.setDateToToday();
+        SpinnerModel sm = new SpinnerNumberModel(60, 1, 1439, 1);
+        taskBase = new JSpinner(sm);
     }
 
     // if one time task send today
