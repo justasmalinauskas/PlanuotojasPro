@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.justas.planuotojaspro.global.GlobalVariables.*;
+import static com.justas.planuotojaspro.global.Settings.language;
 
 
 public class GlobalMethods {
@@ -34,7 +35,7 @@ public class GlobalMethods {
     }
 
     public static String getTranslation(String transname) {
-        return ResourceBundle.getBundle("lang/Resources", new Locale("lt"), new UTF8Control()).getString(transname);
+        return ResourceBundle.getBundle("lang/Resources", new Locale(language), new UTF8Control()).getString(transname);
     }
 
     public static Image getResImage(String imgname) {

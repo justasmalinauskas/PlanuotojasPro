@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.justas.planuotojaspro.global.Task">
-  <grid id="27dc6" binding="panel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="2">
+  <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="true" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="20" y="378" width="500" height="42"/>
     </constraints>
@@ -9,35 +10,49 @@
       <minimumSize width="237" height="36"/>
       <preferredSize width="0" height="50"/>
     </properties>
-    <border type="line">
+    <border type="none">
       <color color="-16777216"/>
     </border>
     <children>
       <component id="a7bc2" class="javax.swing.JLabel" binding="taskname">
-        <constraints/>
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
         <properties>
           <text value="taskname"/>
         </properties>
       </component>
       <component id="46cce" class="javax.swing.JLabel" binding="tasktimes">
-        <constraints/>
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
         <properties>
           <text value="0:00/0:00"/>
         </properties>
       </component>
+      <component id="3c374" class="javax.swing.JSeparator">
+        <constraints>
+          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
       <component id="3c3cf" class="javax.swing.JButton" binding="changeTaskStat">
-        <constraints/>
+        <constraints>
+          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
         <properties>
           <hideActionText value="false"/>
           <horizontalAlignment value="0"/>
-          <text value="Start"/>
+          <text resource-bundle="lang/Resources" key="t_start"/>
         </properties>
       </component>
       <component id="5d16f" class="javax.swing.JButton" binding="taskSettings">
-        <constraints/>
+        <constraints>
+          <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
         <properties>
           <horizontalAlignment value="4"/>
-          <text value="Edit"/>
+          <text resource-bundle="lang/Resources" key="t_edit"/>
           <verticalAlignment value="1"/>
         </properties>
       </component>

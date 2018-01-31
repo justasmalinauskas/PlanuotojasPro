@@ -4,16 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 
 import static com.justas.planuotojaspro.global.GlobalMethods.*;
+import static com.justas.planuotojaspro.global.GlobalVariables.locale;
+import static com.justas.planuotojaspro.global.Settings.getSettingsFromFile;
+import static com.justas.planuotojaspro.global.Settings.language;
+import static com.justas.planuotojaspro.global.TasksList.StopTask;
+
 import com.justas.planuotojaspro.code.*;
-import static com.justas.planuotojaspro.global.GlobalVariables.*;
 
 public class MainWindow {
-    private JFrame frame;
+    private static JFrame frame;
     private JPanel mainPanel;
     private JPanel menu;
     private JPanel content;
@@ -28,7 +33,8 @@ public class MainWindow {
     public MainWindow() {
         // default locale stuff
 
-        Locale.setDefault(new Locale("lt"));
+        getSettingsFromFile();
+        Locale.setDefault(new Locale(language));
 
 
         menuButton.addMouseListener(new MouseAdapter() {
@@ -72,6 +78,17 @@ public class MainWindow {
 
             }
         });
+        /*frame.addWindowListener( new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+                JFrame frame = (JFrame)e.getSource();
+
+                StopTask();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.dispose();
+            }
+        });*/
     }
 
     private void showMenuText() {
@@ -79,9 +96,9 @@ public class MainWindow {
         menuButton.setText(getTranslation("t_menu"));
         settings.setText(getTranslation("t_settings"));
         currenttasks.setText(getTranslation("t_currenttasks"));
-        about.setText(getTranslation("t_about"));
+        about.setText(getTranslation("t_help"));
         statistics.setText(getTranslation("t_statistics"));
-        tasks.setText(getTranslation("t_tasks"));
+        tasks.setText(getTranslation("t_newtask"));
     }
 
     private void hideMenuText() {
@@ -103,12 +120,16 @@ public class MainWindow {
         SwingUtilities.invokeLater(new Thread(this::guiStart));
     }
 
+    public void close() {
+        frame.dispose();
+    }
+
 
     private void guiStart() {
         frame = new JFrame("PlanuotojasPro");
         frame.setMinimumSize(new Dimension(800, 600));
         frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(mainPanel);
         frame.setResizable(true);
         frame.setVisible(true);
@@ -138,7 +159,7 @@ public class MainWindow {
         content.add(new TasksWindow().returnPanel(), "tasks");
         content.add(new StatisticsWindow().returnPanel(), "statistics");
         content.add(new SettingsWindow().returnPanel(), "settings");
-        content.add(new AboutWindow().returnPanel(), "about");
+        content.add(new HelpWindow().returnPanel(), "about");
     }
 
     private void setIcons() {

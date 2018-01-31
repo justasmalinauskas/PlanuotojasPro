@@ -1,10 +1,15 @@
 package com.justas.planuotojaspro.global;
 
+import com.justas.planuotojaspro.windows.CurrentTasksWindow;
+import com.justas.planuotojaspro.windows.TasksWindow;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Task {
+import static com.justas.planuotojaspro.global.GlobalMethods.getTranslation;
+
+public class Task extends JPanel {
 
 
     private int taskid;
@@ -15,17 +20,19 @@ public class Task {
     private JPanel panel;
     private int taskbase;
 
-    private int taskdateid;
+    private int timeid;
     private int taskduration;
     private String taskdate;
 
+    private boolean isRuning = false;
 
-    public Task(int taskid, String taskname, int taskbase, int taskdateid, int taskduration, String taskdate) {
+
+    public Task(int taskid, String taskname, int taskbase, int timeid, int taskduration, String taskdate) {
         this.taskid = taskid;
         this.taskname.setText(taskname);
         this.taskbase = taskbase;
 
-        this.taskdateid = taskdateid;
+        this.timeid = timeid;
         this.taskduration = taskduration;
         this.taskdate = taskdate;
 
@@ -35,13 +42,48 @@ public class Task {
         changeTaskStat.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                if (!isRuning) {
+                    startTask(timeid);
+                }
+                else {
+                    stopTask();
+                }
+            }
+        });
+        taskSettings.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                stopTask();
+                TasksWindow tasksWindow = new TasksWindow();
+                tasksWindow.editTask(getThis());
             }
         });
     }
 
+    private Task getThis() {
+        return this;
+    }
 
-    private void setTaskTimes() {
+    private void startTask(int timeid) {
+        if (!isRuning) {
+            TasksList.StopTask();
+            TasksList.startTask(timeid);
+            isRuning = true;
+            changeTaskStat.setText(getTranslation("t_stop"));
+        }
+
+    }
+
+    protected void stopTask() {
+        if (isRuning) {
+            isRuning = false;
+            TasksList.StopTask();
+            changeTaskStat.setText(getTranslation("t_start"));
+        }
+    }
+
+
+    protected void setTaskTimes() {
         tasktimes.setText(getHandM(taskduration) + "/" + getHandM(taskbase));
     }
 
@@ -69,11 +111,11 @@ public class Task {
     }
 
     public int getTaskdateid() {
-        return taskdateid;
+        return timeid;
     }
 
-    public void setTaskdateid(int taskdateid) {
-        this.taskdateid = taskdateid;
+    public void setTaskdateid(int timeid) {
+        this.timeid = timeid;
     }
 
     public int getTaskbase() {
@@ -100,7 +142,20 @@ public class Task {
         this.taskid = taskid;
     }
 
+    public boolean getifRunning() {
+        return isRuning;
+    }
+
     public JPanel getTaskPanel() {
         return this.panel;
+    }
+
+    public String getAll() {
+        return "TaskID: " + taskid + " TaskUniqueID: " + timeid + " Task: " +  taskname.getText() + " Date: " + taskdate +
+                " Time: " + getHandM(taskduration) + "/" + getHandM(taskbase);
+    }
+
+    public void addDuration() {
+        this.taskduration++;
     }
 }

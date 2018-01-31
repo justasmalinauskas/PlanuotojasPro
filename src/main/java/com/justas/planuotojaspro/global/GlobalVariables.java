@@ -1,5 +1,7 @@
 package com.justas.planuotojaspro.global;
 
+import java.util.Locale;
+
 public class GlobalVariables {
     public static final String fallbackIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAIAAAC1e" +
             "HXNAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD" +
@@ -20,5 +22,7 @@ public class GlobalVariables {
             "fNfm9zjZyenH4bvp9MpEf0PJpcbJbyyoQsAAABBdEVYdGNvbW1lbnQAQ1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlB" +
             "FRyB2ODApLCBxdWFsaXR5ID0gOTAKumTchwAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNy0xMi0wNVQxMTo1NDo1NC0wNTowMBEnjL0AAA" +
             "AldEVYdGRhdGU6bW9kaWZ5ADIwMTctMTItMDVUMTE6NTQ6NTQtMDU6MDBgejQBAAAAAElFTkSuQmCC";
+
+    public static Locale locale = new Locale("en");
 }
 

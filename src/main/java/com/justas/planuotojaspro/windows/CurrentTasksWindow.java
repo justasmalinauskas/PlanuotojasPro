@@ -8,31 +8,32 @@ import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.justas.planuotojaspro.code.*;
 import com.justas.planuotojaspro.global.Task;
+import com.justas.planuotojaspro.global.TasksList;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static com.justas.planuotojaspro.global.GlobalMethods.getTranslation;
+import static com.justas.planuotojaspro.global.TasksList.StopTask;
 
-public class CurrentTasksWindow {
+public class CurrentTasksWindow extends JFrame {
 
     private JPanel panel;
     private JRoundedTextField searchbar;
     private JLabel datesjobs;
     private DatePicker datePicker;
-    private JScrollPane tasksLists;
+    private JScrollPane scrollPane;
     private JPanel tasksList;
-    private ArrayList<Task> tasks;
+    private JPanel topPanel;
+    private JButton refresh;
 
     public CurrentTasksWindow() {
         datesjobs.setText(getTranslation("t_todaytasks"));
-
-
-        //searchbar.setPreferredSize(new Dimension(200,63));
 
         refreshTasks();
 
@@ -68,32 +69,46 @@ public class CurrentTasksWindow {
                 refreshTasks();
             }
         });
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                refreshTasks();
+            }
+        });
     }
 
     private void refreshTasks() {
-
-        DatabaseActions db = new DatabaseActions();
-        System.out.println("Getting " + datePicker.getDate().toString() + " tasks.");
-        tasks = db.getTasksAtDate(datePicker.getDate().toString());
-        System.out.println("Found: " + tasks.size() + " tasks.");
-        tasksLists.removeAll();
-        System.out.println(tasksLists.getComponentCount());
-        tasks.forEach(task -> {
-            System.out.println("Task:" + task.getTaskid() + " " + task.getTaskdateid() + " " +
-                    task.getTaskname() + " " + task.getTaskduration() + " " +
-                    task.getTaskbase());
-            if (task.getTaskname().contains(searchbar.getText())) {
-                tasksLists.add(task.getTaskPanel());
-            }
-        });
         SwingUtilities.invokeLater(() -> {
-            tasksLists.revalidate();
-            tasksLists.repaint();
-            tasksLists.setVisible(true);
+            StopTask();
+            System.out.println("Getting " + datePicker.getDate().toString() + " tasks.");
+            TasksList.getAllTasks();
+            System.out.println("Used query: " + searchbar.getText() + " With date: " + datePicker.getDate().toString());
+            tasksList.removeAll();
+            int runtid = TasksList.getRunningTaskID();
+            if (runtid != -1) {
+                tasksList.add(TasksList.getTask(runtid));
+                System.out.println("Running: " + TasksList.getTask(runtid).getAll());
+            }
+            System.out.println(tasksList.getComponentCount());
+            for (Task task : TasksList.searchByNameAndDate(searchbar.getText(), datePicker.getDate().toString())) {
+                if (TasksList.searchByNameAndDate(searchbar.getText(), datePicker.getDate().toString()).indexOf(task) != runtid) {
+                    tasksList.add(task.getTaskPanel(), BorderLayout.NORTH);
+                    System.out.println(task.getAll());
+                }
+            }
+            tasksList.revalidate();
+            tasksList.repaint();
+            tasksList.revalidate();
+            tasksList.repaint();
+            tasksList.setVisible(true);
+            System.out.println(tasksList.getComponentCount());
         });
-        System.out.println(tasksLists.getComponentCount());
-
     }
+
+
+
+
+
 
     public JPanel returnPanel() {
         return this.panel;
@@ -114,5 +129,10 @@ public class CurrentTasksWindow {
         datePickerButton.setBorderPainted(false);
         datePickerButton.setOpaque(false);
         datePickerButton.setText(getTranslation("t_changedate"));
+        tasksList = new JPanel(new GridLayout(0, 1));
+    }
+
+    public void update() {
+        refreshTasks();
     }
 }

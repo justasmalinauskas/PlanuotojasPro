@@ -3,10 +3,15 @@ package com.justas.planuotojaspro.windows;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.justas.planuotojaspro.code.DatabaseActions;
+import com.justas.planuotojaspro.global.Task;
+import com.justas.planuotojaspro.global.UserMessages;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,8 +20,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+
 import static com.justas.planuotojaspro.global.GlobalMethods.getTranslation;
-import static com.justas.planuotojaspro.global.UserMessages.errorMessage;
 
 public class TasksWindow {
     private JPanel panel;
@@ -31,9 +36,14 @@ public class TasksWindow {
     private JButton insertDay;
     private JSpinner taskBase;
     private ArrayList<String> tasks = new ArrayList<>();
+    private Task editableTask;
+    private JDialog dialog;
 
     public TasksWindow() {
-        thisIsOneTimeRadioButton.setSelected(true);
+        thisIsTaskHappeningRadioButton.setSelected(true);
+
+
+
         specificDays();
 
 
@@ -48,32 +58,75 @@ public class TasksWindow {
             specificDays();
         });
         saveChangesButton.addActionListener(actionEvent -> {
-            if (taskName.getText().equals("")) {
-                errorMessage(getTranslation("t_musthavetaskname"), getTranslation("t_error"));
-                return;
-            }
-            if (thisIsTaskHappeningRadioButton.isSelected() && tasks.size() == 0) {
-                errorMessage(getTranslation("t_musthavedates"), getTranslation("t_error"));
-                return;
-            }
             DatabaseActions db = new DatabaseActions();
-            if (thisIsOneTimeRadioButton.isSelected()) {
-                ArrayList<String> quick = new ArrayList<>();
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate localDate = LocalDate.now();
-                quick.add(dtf.format(localDate));
-                db.insertTask(taskName.getText(), (Integer) taskBase.getValue(), quick);
-            } else {
-                db.insertTask(taskName.getText(), (Integer) taskBase.getValue(), tasks);
+            if (taskName.getText().equals("")) {
+                new UserMessages().errorMessage(getTranslation("t_musthavetaskname"), getTranslation("t_error"));
+                return;
             }
+            if (thisIsTaskHappeningRadioButton.isSelected() && tasks.size() == 0 && editableTask.getTaskname().length() == 0) {
+                new UserMessages().errorMessage(getTranslation("t_musthavedates"), getTranslation("t_error"));
+                return;
+            }
+            if (editableTask != null) {
+                boolean msg = new UserMessages().confirmMessage(getTranslation("t_comfirmchanges"), getTranslation("t_comfirmchanges"));
+                if (msg) {
+
+                    db.updateTasks(editableTask.getTaskid(), taskName.getText(), (Integer) taskBase.getValue(), tasks);
+                    new UserMessages().infoMessage(getTranslation("t_changesdone"), getTranslation("t_done"));
+                    dialog.dispose();
+                }
+            }
+            else {
+
+                if (thisIsOneTimeRadioButton.isSelected()) {
+                    ArrayList<String> quick = new ArrayList<>();
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    LocalDate localDate = LocalDate.now();
+                    quick.add(dtf.format(localDate));
+                    db.insertTask(taskName.getText(), (Integer) taskBase.getValue(), quick);
+                } else {
+                    db.insertTask(taskName.getText(), (Integer) taskBase.getValue(), tasks);
+                }
+                new UserMessages().infoMessage(getTranslation("t_changesdone"), getTranslation("t_done"));
+                setDefault();
+
+            }
+
         });
         insertDay.addActionListener(actionEvent -> {
             tasks.add(selectDay.getText());
             getDays();
         });
         cancelChangesButton.addActionListener(actionEvent -> {
-
+            setDefault();
         });
+        selectedDays.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList)evt.getSource();
+                if (evt.getClickCount() == 2) {
+
+                    // Double-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+                    tasks.remove(index);
+                    getDays();
+                } else if (evt.getClickCount() == 3) {
+
+                    // Triple-click detected
+                    int index = list.locationToIndex(evt.getPoint());
+                }
+            }
+        });
+    }
+
+    private void setDefault() {
+        taskBase.setValue(60);
+        taskName.setText("");
+        tasks = new ArrayList<>();
+        selectedDays.setModel(new DefaultListModel<>());
+    }
+
+    private void dispose() {
     }
 
     private void specificDays() {
@@ -118,7 +171,20 @@ public class TasksWindow {
         taskBase = new JSpinner(sm);
     }
 
-    // if one time task send today
-    //if task by days send week days
-    // if specific days send week days as array
+    public void editTask(Task task) {
+        editableTask = task;
+
+
+        taskName.setText(editableTask.getTaskname());
+        taskBase.setValue(editableTask.getTaskbase());
+        final DefaultListModel<String> model = new DefaultListModel<>();
+        tasks.addAll(DatabaseActions.getDaysByTask(editableTask.getTaskid()));
+        getDays();
+        dialog = new JDialog();
+        dialog.add(this.panel);
+        dialog.setPreferredSize(new Dimension(600,500));
+        dialog.pack();
+        dialog.setVisible(true);
+
+    }
 }
